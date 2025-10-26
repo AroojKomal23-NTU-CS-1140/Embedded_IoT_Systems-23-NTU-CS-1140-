@@ -64,7 +64,9 @@ This project uses an ESP32, OLED display, two buttons, and three LEDs to demonst
 
 | OLED Display | Circuit Simulation |
 |---------------|--------------------|
-| ![Alternate patterns](./Screenshots/Screen1.jpg) | ![All On](./Screenshots/Screen2.jpg) | ![PWM](./Screenshots/Screen3.jpg) | ![Reset](./Screenshots/Screen4.jpg)
+| ![Alternate patterns](./Screenshots/Screen1.jpg) | ![All On](./Screenshots/Screen2.jpg) | ![PWM](./Screenshots/Screen3.jpg) | ![Reset](./Screenshots/Screen4.jpg) |
 
 ---
 
+## hand drawn diagram
+| ![Diagram](./Screenshots/Handwritten_diagram.jpg) |
