@@ -1,3 +1,9 @@
+/* Name: Arooj Komal
+   Reg no. : 23-NTU-CS-1140
+   Section: BSAI 5th
+*/
+
+
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
