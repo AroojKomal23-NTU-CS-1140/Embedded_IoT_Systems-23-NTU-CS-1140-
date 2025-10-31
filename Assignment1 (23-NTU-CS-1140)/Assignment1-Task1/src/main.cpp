@@ -21,7 +21,6 @@
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-// ---- Global Variables ----
 int mode = 0;
 int lastButtonState = HIGH;
 
@@ -116,7 +115,7 @@ void loop() {
       digitalWrite(LED3, HIGH);
       break;
 
-    case 3: // Fade LED1
+    case 3: // Fade LED1 PWM
       updateDisplay("PWM Fade");
       for (int d = 0; d <= 255; d++) {
         analogWrite(LED1, d);
