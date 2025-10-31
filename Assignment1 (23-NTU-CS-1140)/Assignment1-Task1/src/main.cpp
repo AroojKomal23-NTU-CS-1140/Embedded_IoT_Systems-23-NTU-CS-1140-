@@ -3,7 +3,6 @@
    Section: BSAI 5th
 */
 
-
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -21,6 +20,13 @@
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
+// ---- LEDC PWM Setup ----
+#define LEDC_CHANNEL_1 0
+#define LEDC_CHANNEL_2 1
+#define LEDC_FREQ 5000       // 5 kHz frequency
+#define LEDC_RESOLUTION 8    // 8-bit resolution (0-255)
+
+// ---- Variables ----
 int mode = 0;
 int lastButtonState = HIGH;
 
@@ -40,8 +46,6 @@ void updateDisplay(const char* message) {
 void setup() {
   pinMode(BUTTON_MODE, INPUT_PULLUP);
   pinMode(BUTTON_RESET, INPUT_PULLUP);
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
   pinMode(LED3, OUTPUT);
 
   Serial.begin(9600);
@@ -51,6 +55,12 @@ void setup() {
     Serial.println("OLED not found!");
     while (true);
   }
+
+  // Initialize LEDC PWM
+  ledcSetup(LEDC_CHANNEL_1, LEDC_FREQ, LEDC_RESOLUTION);
+  ledcSetup(LEDC_CHANNEL_2, LEDC_FREQ, LEDC_RESOLUTION);
+  ledcAttachPin(LED1, LEDC_CHANNEL_1);
+  ledcAttachPin(LED2, LEDC_CHANNEL_2);
 
   display.clearDisplay();
   display.setTextSize(1);
@@ -90,8 +100,8 @@ void loop() {
   // --- LED Behavior Based on Mode ---
   switch (mode) {
     case 0: // OFF
-      digitalWrite(LED1, LOW);
-      digitalWrite(LED2, LOW);
+      ledcWrite(LEDC_CHANNEL_1, 0);
+      ledcWrite(LEDC_CHANNEL_2, 0);
       digitalWrite(LED3, LOW);
       updateDisplay("OFF");
       break;
@@ -110,23 +120,21 @@ void loop() {
 
     case 2: // All ON
       updateDisplay("All ON");
-      digitalWrite(LED1, HIGH);
-      digitalWrite(LED2, HIGH);
+      ledcWrite(LEDC_CHANNEL_1, 255);
+      ledcWrite(LEDC_CHANNEL_2, 255);
       digitalWrite(LED3, HIGH);
       break;
 
-    case 3: // Fade LED1 PWM
+    case 3: // Fade LED1 and LED2 using LEDC PWM
       updateDisplay("PWM Fade");
       for (int d = 0; d <= 255; d++) {
-        analogWrite(LED1, d);
-        delay(5);
-        analogWrite(LED2, d);
+        ledcWrite(LEDC_CHANNEL_1, d);
+        ledcWrite(LEDC_CHANNEL_2, d);
         delay(5);
       }
       for (int d = 255; d >= 0; d--) {
-        analogWrite(LED1, d);
-        delay(5);
-        analogWrite(LED2, d);
+        ledcWrite(LEDC_CHANNEL_1, d);
+        ledcWrite(LEDC_CHANNEL_2, d);
         delay(5);
       }
       break;
